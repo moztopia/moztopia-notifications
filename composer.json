@@ -1,0 +1,26 @@
+{
+    "name": "moztopia/notifications",
+    "description": "Laravel notification history and independently queued FCM and APNs device delivery.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "~8.4.27 || ~8.5.12",
+        "illuminate/database": "^12.0 || ^13.0",
+        "illuminate/notifications": "^12.0 || ^13.0",
+        "illuminate/queue": "^12.0 || ^13.0",
+        "laravel-notification-channels/fcm": "^6.2",
+        "laravel-notification-channels/apn": "^6.5"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "pestphp/pest": "^4.0",
+        "laravel/pint": "^1.25"
+    },
+    "autoload": {"psr-4": {"Moztopia\\Notifications\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Moztopia\\Notifications\\Tests\\": "tests/"}},
+    "extra": {"laravel": {"providers": ["Moztopia\\Notifications\\NotificationsServiceProvider"]}},
+    "scripts": {"test": "pest", "lint": "pint --test"},
+    "config": {"sort-packages": true, "allow-plugins": {"pestphp/pest-plugin": true}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
