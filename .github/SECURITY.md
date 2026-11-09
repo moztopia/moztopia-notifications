@@ -10,6 +10,8 @@ The maintainers will assess reports privately and coordinate a fix and disclosur
 
 ## Supported versions
 
-No stable version has been tagged yet. Security reports against the current `develop` branch are welcome. The planned `0.9.0` release is not available until its tag is published. Supported release lines will be announced with releases; do not assume an unmaintained fork receives security fixes.
+Security reports against the latest published `0.x` version and the current `develop` branch are welcome. Check the [published tags](https://github.com/moztopia/moztopia-notifications/tags), [release notes](https://github.com/moztopia/moztopia-notifications/releases) and [changelog](../CHANGELOG.md) for version availability and known limits. Fixes normally land in development and a subsequent published version; do not assume an older checkpoint or unmaintained fork receives backported fixes.
+
+Before version `1.0`, interfaces may change between minor versions. Pin a reviewed version and assess its upgrade notes. Publication of a numeric tag does not prove production-device compatibility or create a support SLA.
 
 Automated provider-mocked tests are not proof of actual device delivery. Keep sensitive content out of push payloads and verify integration in the consuming environment.
