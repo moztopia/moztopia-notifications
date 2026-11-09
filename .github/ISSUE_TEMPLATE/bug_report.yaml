@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a reproducible problem in the package.
+title: "[Bug]: "
+labels: [bug, notifications]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Moztopia Notifications. Search existing issues first.
+        For questions, use Discussions. Report vulnerabilities privately through Security.
+        Never include device tokens, credentials, personal information or sensitive payloads.
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version or development commit
+      description: Use composer show moztopia/notifications to identify the installed version.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include PHP/Laravel versions, database engine, queue driver, transport and relevant OS/app state.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide small reproducible steps or a public test repository using dummy data and mocked credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+      description: Distinguish provider acceptance from device receipt, display and tap handling.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Optional safe error codes and test output. Remove tokens, keys, private URLs and user data.
+      render: text
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and checked the documentation.
+          required: true
+        - label: This report contains no credentials, device tokens or private user information.
+          required: true

@@ -1,0 +1,29 @@
+name: Scoped enhancement
+description: Turn an agreed idea into a bounded package improvement.
+title: "[Enhancement]: "
+labels: [enhancement, notifications]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start substantial proposals in the Ideas discussion category so maintainers can agree scope.
+        The package remains focused on Laravel history and FCM/APNs device delivery.
+  - type: input
+    id: discussion
+    attributes:
+      label: Related discussion or issue
+      description: Link the prior discussion when available.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and users affected
+      description: Explain the concrete integration problem without private application details.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior and acceptance criteria
+      description: Describe a small reviewable outcome, compatibility considerations and how it can be tested.
+    validations:
+      required: true
