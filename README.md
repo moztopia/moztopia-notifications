@@ -95,3 +95,9 @@ FCM and APNs transport do not require notification subscription fees. Server hos
 ## License
 
 [MIT](LICENSE).
+
+## Community and support
+
+Ask questions in [Discussions](https://github.com/moztopia/moztopia-notifications/discussions), report reproducible defects through [Issues](https://github.com/moztopia/moztopia-notifications/issues/new/choose), and read [Contributing](CONTRIBUTING.md) before proposing changes. Security vulnerabilities belong in [private reports](https://github.com/moztopia/moztopia-notifications/security/advisories/new).
+
+Please follow the [community conduct policy](CODE_OF_CONDUCT.md). You can support maintenance through [Buy Me a Coffee](https://buymeacoffee.com/mozrin); sponsorship does not grant merge access or a support SLA.
