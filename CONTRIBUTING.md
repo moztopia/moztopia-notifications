@@ -36,7 +36,7 @@ Do not commit credentials, device tokens, generated dependency lockfiles, privat
 
 ## Review and publishing
 
-Protected integration branches require a PR, another maintainer's approval, current code-owner review and resolved conversations. New commits invalidate stale approvals. Public users cannot merge or write package code. Maintainers control release tags and publication; sponsoring does not purchase merge access, a security exception or a support SLA.
+Protected integration branches require a PR and resolved conversations. Normal review requires a fresh approval from another maintainer and applicable code-owner review. The repository owner's explicit approval is sufficient without a second maintainer, including when the owner's account authored the PR; an owner-only, PR-only exception implements that approval path. New commits invalidate stale approvals. Public users cannot merge or write package code. Maintainers control release tags and publication; sponsoring does not purchase merge access, a security exception or a support SLA.
 
 GitHub Actions defaults to read-only tokens. Outside contributors' workflows require approval. Do not use `pull_request_target` to execute untrusted PR code with secrets, and do not ask maintainers to expose provider credentials for a reproduction. Current configured checks and required reviews determine merge eligibility; do not assume a nonexistent CI check has run.
 

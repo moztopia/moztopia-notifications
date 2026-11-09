@@ -4,7 +4,11 @@
 
 Keep write/admin access limited to trusted maintainers and review it periodically. Public users can fork, open issues/Discussions and propose PRs; that does not grant write access. Do not grant collaborator access just to remove a contribution-volume cap. Code owners identify reviewers, not an invitation to share account credentials.
 
-Integration branches (`develop`, future `main`, `staging` and maintenance lines) require reviewed PRs, a fresh approval from another maintainer, applicable code-owner approval and resolved conversations. Force pushes and deletion are blocked, including for admins. Organization rules continue to apply. Do not temporarily weaken protection to merge an unapproved change.
+Integration branches (`develop`, future `main`, `staging` and maintenance lines) require PRs and resolved conversations. Normal review requires a fresh approval from another maintainer and applicable code-owner review. Explicit repository-owner approval is also sufficient, including for a PR authored using the owner's account. Only the owner's user identity has a PR-only exception to the additional review rule; other actors retain the normal review gate.
+
+Before using that exception, record the owner's explicit approval on the PR/issue or reference the approving instruction from the active work session. An agent using the owner's credentials must not interpret access to the exception as permission to merge. GitHub cannot distinguish an automated caller from the human using the same account. A request to change the rule is not itself approval of an open PR. Owner-controlled `main` merges still require the human release process.
+
+Force pushes and deletion remain blocked by the inherited organization rules, including for the owner. Tag immutability and release protections are unchanged. The exception is limited to PR integration; it does not authorize direct protected-branch pushes or arbitrary governance bypasses.
 
 Keep `develop` as the contribution target. Move the public default to `main` only through the separately reviewed public release promotion. Release tags are administrator-created, cannot be changed/deleted, and published GitHub releases are immutable. Corrections require a new version. Protect Packagist maintainer accounts as carefully as GitHub accounts; do not add maintainers or change the package source casually.
 
