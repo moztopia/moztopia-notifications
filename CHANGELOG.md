@@ -4,6 +4,7 @@ This file records package changes by numeric version. Git tags identify the sour
 
 ## Unreleased — category push integration branch
 
+- Fix the initial history morph index name for MariaDB/MySQL’s 64-character identifier limit (issue #16); existing columns/data and installed SQLite indexes need no change.
 - Add optional per-recipient `pushCategories` preferences, independently of history/category eligibility and the global push switch.
 - Add application `push_categories` policy for categories that must never send push; evaluate it and current preferences at creation and every delivery attempt.
 - Add category-to-Android-channel mapping through `android_channels`, emitted as FCM `android.notification.channel_id`.
