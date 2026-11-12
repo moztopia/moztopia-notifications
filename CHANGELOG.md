@@ -2,6 +2,16 @@
 
 This file records package changes by numeric version. Git tags identify the source; [GitHub Releases](https://github.com/moztopia/moztopia-notifications/releases) contain publication notes. A version tag does not establish real-device delivery or production readiness.
 
+## Unreleased — category push integration branch
+
+- Add optional per-recipient `pushCategories` preferences, independently of history/category eligibility and the global push switch.
+- Add application `push_categories` policy for categories that must never send push; evaluate it and current preferences at creation and every delivery attempt.
+- Add category-to-Android-channel mapping through `android_channels`, emitted as FCM `android.notification.channel_id`.
+- Add a nullable `push_categories` preference column through a separate reversible migration. Existing rows and omitted mappings preserve Whisper behavior.
+- Retain event identity, history, per-device delivery tracking, retries and direct APNs. Re-enabling alerts does not replay suppressed events.
+
+This work is held on `wip/0/14-category-push-and-android-channels` for consumer integration and author coordination. VERSION and the immutable 0.9.0 tag remain unchanged until an accepted integration/release. See [branch usage, migration and compatibility](docs/CATEGORY_PUSH.md). Real-device verification remains pending.
+
 ## [0.9.0] — Whisper
 
 Whisper is the first named release of `moztopia/notifications`. It formalizes the package implemented in the `0.0.2` integration checkpoint. Notification runtime behavior and database schema are unchanged from that checkpoint.

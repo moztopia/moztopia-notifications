@@ -93,13 +93,32 @@ it('skips work made ineligible after enqueueing', function (string $change): voi
         'global' => app(NotificationPreferenceService::class)->update($this->owner, enabled: false),
         'category' => app(NotificationPreferenceService::class)->update($this->owner, categories: ['updates' => false]),
         'push' => app(NotificationPreferenceService::class)->update($this->owner, pushEnabled: false),
+        'push_category' => app(NotificationPreferenceService::class)->update($this->owner, pushCategories: ['updates' => false]),
+        'policy' => config(['moztopia-notifications.push_categories' => ['updates' => false]]),
         'delete' => app(NotificationHistoryService::class)->delete($this->owner, $message->id),
     };
     $this->transport->shouldNotReceive('send');
     $this->deliveries->attempt(NotificationDelivery::first()->id);
     expect(NotificationDelivery::first()->state)->toBe('skipped')
         ->and(NotificationHistory::count())->toBe($change === 'delete' ? 0 : 1);
-})->with(['rotate', 'remove', 'reassign', 'device', 'global', 'category', 'push', 'delete']);
+})->with(['rotate', 'remove', 'reassign', 'device', 'global', 'category', 'push', 'push_category', 'policy', 'delete']);
+
+it('rechecks category push eligibility before retrying a failed delivery', function (string $change): void {
+    $this->devices->register($this->owner, 'one', 'android', 'token');
+    $this->sender->send($this->owner, $this->payload, 'event');
+    $this->transport->shouldReceive('send')->once()->andReturn(['state' => 'retryable_failure', 'error_code' => 'provider_unavailable']);
+    $delivery = NotificationDelivery::first();
+    $this->deliveries->attempt($delivery->id);
+    $this->travel(31)->seconds();
+    if ($change === 'preference') {
+        app(NotificationPreferenceService::class)->update($this->owner, pushCategories: ['updates' => false]);
+    } else {
+        config(['moztopia-notifications.push_categories' => ['updates' => false]]);
+    }
+    $this->deliveries->attempt($delivery->id);
+    expect($delivery->refresh()->state)->toBe('skipped')->and($delivery->attempts)->toBe(1)
+        ->and(NotificationHistory::count())->toBe(1);
+})->with(['preference', 'policy']);
 
 it('permanently rejects definitive invalid tokens and safely revokes only their generation', function (): void {
     $device = $this->devices->register($this->owner, 'one', 'android', 'old');

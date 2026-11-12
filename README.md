@@ -4,6 +4,8 @@
 
 Laravel notification history and independently queued push delivery through FCM for Android and direct APNs for iOS. One notification per recipient, one delivery per device, one retry lifecycle per delivery.
 
+This working branch extends Whisper with [category push preferences and Android channel mapping](docs/CATEGORY_PUSH.md). It is not a new published release; the wiki and numeric 0.9.0 release describe the original contract.
+
 **[Full implementation documentation → GitHub wiki](https://github.com/moztopia/moztopia-notifications/wiki)** · [Changelog](CHANGELOG.md) · [Release notes](https://github.com/moztopia/moztopia-notifications/releases) · [Real-device smoke tests](https://github.com/moztopia/moztopia-notifications/wiki/Testing)
 
 ## Requirements
@@ -21,7 +23,7 @@ php artisan vendor:publish --tag=moztopia-notifications-migrations
 php artisan migrate
 ```
 
-No private GitHub credentials or custom Composer repository are required. Laravel discovers the service provider automatically. The single migration creates all five package tables, including `moztopia_notification_history`; it does not use or modify an application's `notifications` table. See the [installation guide](https://github.com/moztopia/moztopia-notifications/wiki/Installation) and [upgrade notes](CHANGELOG.md#upgrade-from-002).
+No private GitHub credentials or custom Composer repository are required for published releases. Laravel discovers the service provider automatically. The initial migration creates all five package tables, including `moztopia_notification_history`; it does not use or modify an application's `notifications` table. This branch also includes an additive preference migration; follow its [branch installation and upgrade instructions](docs/CATEGORY_PUSH.md) when using it instead of the published release. See the [installation guide](https://github.com/moztopia/moztopia-notifications/wiki/Installation) and [upgrade notes](CHANGELOG.md#upgrade-from-002).
 
 Set `NOTIFICATIONS_APPLICATION` to a stable application identifier and `NOTIFICATIONS_FINGERPRINT_KEY` to an independently generated secret of at least 32 bytes. Tokens and internal payloads use Laravel encryption and `APP_KEY`. Configure FCM using `FIREBASE_CREDENTIALS` and the selected Firebase project; configure APNs with `APN_KEY_ID`, `APN_TEAM_ID`, `APN_BUNDLE_ID`, and `APN_PRIVATE_KEY_PATH`. [Credential and environment setup](https://github.com/moztopia/moztopia-notifications/wiki/Configuration).
 

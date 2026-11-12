@@ -17,11 +17,24 @@ final class NotificationPreference extends Model
 
     protected function casts(): array
     {
-        return ['enabled' => 'boolean', 'push_enabled' => 'boolean', 'categories' => 'array'];
+        return ['enabled' => 'boolean', 'push_enabled' => 'boolean', 'categories' => 'array', 'push_categories' => 'array'];
     }
 
     public function allows(string $category): bool
     {
         return $this->enabled && (($this->categories ?? [])[$category] ?? true);
+    }
+
+    /**
+     * Check history eligibility, user push preferences and application category policy.
+     */
+
+    public function allowsPush(string $category): bool
+    {
+        $policy = config('moztopia-notifications.push_categories', []);
+
+        return $this->allows($category) && $this->push_enabled
+            && (($this->push_categories ?? [])[$category] ?? true)
+            && ($policy[$category] ?? true);
     }
 }

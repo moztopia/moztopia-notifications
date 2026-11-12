@@ -30,6 +30,7 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
         (require __DIR__.'/../database/migrations/2026_11_09_000001_create_moztopia_notification_tables.php')->up();
+        (require __DIR__.'/../database/migrations/2026_11_12_000001_add_push_categories_to_moztopia_notification_preferences.php')->up();
         Schema::create('test_recipients', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->timestamps();

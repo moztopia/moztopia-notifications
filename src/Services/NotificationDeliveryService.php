@@ -70,7 +70,7 @@ final class NotificationDeliveryService
                 return null;
             }
             $device = NotificationDevice::whereKey($delivery->device_id)->lockForUpdate()->first();
-            if ($message->cancelled_at !== null || $message->payload === null || !$preference->allows($message->category) || !$preference->push_enabled
+            if ($message->cancelled_at !== null || $message->payload === null || !$preference->allowsPush($message->category)
                 || $device === null || $device->revoked_at !== null || !$device->push_enabled || $device->token === null
                 || $device->owner_type !== $owner->getMorphClass() || $device->owner_id !== (string) $owner->getKey()
                 || $device->application !== $message->application || $device->generation !== $delivery->generation
