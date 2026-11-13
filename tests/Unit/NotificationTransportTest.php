@@ -20,10 +20,12 @@ use Pushok\Client;
 use Pushok\Response;
 
 it('uses the real FCM channel with exactly one token and parses its returned acceptance report', function (): void {
+    config(['moztopia-notifications.android_channels' => ['general' => 'activity_updates']]);
     $device = app(NotificationDeviceService::class)->register(NotificationTestRecipient::create(), 'one', 'android', 'secret-token');
     $messaging = Mockery::mock(Messaging::class);
     $messaging->shouldReceive('sendMulticast')->once()->withArgs(function ($message, $tokens): bool {
         expect($tokens)->toBe(['secret-token'])->and($message->toArray()['data']['notification_id'])->toBeString();
+        expect($message->toArray()['android']['notification']['channel_id'])->toBe('activity_updates');
 
         return true;
     })->andReturn(MulticastSendReport::withItems([SendReport::success(MessageTarget::with('token', 'secret-token'), ['name' => 'safe-id'])]));
@@ -32,6 +34,29 @@ it('uses the real FCM channel with exactly one token and parses its returned acc
     $notification = new NotificationPushMessage((new NotificationPayload('Title', 'Body'))->toArray(), (string) Illuminate\Support\Str::uuid7(), 60);
     expect($transport->send($device, $notification)['state'])->toBe('provider_accepted');
 });
+
+it('maps each configured category to its Android channel while preserving delivery metadata', function (string $category, string $channel): void {
+    config(['moztopia-notifications.android_channels' => ['messages' => 'chat_messages', 'matches' => 'mutual_matches']]);
+    $payload = new NotificationPayload('Title', 'Body', $category, deepLink: 'example://activity', data: ['event' => 'test'], priority: 'high', collapseId: 'thread-one');
+    $notification = new NotificationPushMessage($payload->toArray(), 'event-id', 42);
+    $fcm = $notification->toFcm(null)->toArray();
+    expect($fcm['android'])->toBe(['priority' => 'high', 'ttl' => '42s', 'collapse_key' => 'thread-one', 'notification' => ['channel_id' => $channel]])
+        ->and($fcm['notification']['title'])->toBe('Title')->and($fcm['notification']['body'])->toBe('Body')
+        ->and($fcm['data']['notification_id'])->toBe('event-id')->and($fcm['data']['category'])->toBe($category)
+        ->and($fcm['data']['deep_link'])->toBe('example://activity')->and(json_decode($fcm['data']['data'], true))->toBe(['event' => 'test']);
+})->with([['messages', 'chat_messages'], ['matches', 'mutual_matches']]);
+
+it('leaves Android channel selection absent for legacy or unmapped categories', function (): void {
+    config(['moztopia-notifications.android_channels' => ['messages' => 'chat_messages']]);
+    $notification = new NotificationPushMessage((new NotificationPayload('Title', 'Body', 'other'))->toArray(), 'event-id', 60);
+    expect($notification->toFcm(null)->toArray()['android'])->not->toHaveKey('notification');
+});
+
+it('rejects invalid Android channel IDs instead of silently choosing another channel', function (mixed $channel): void {
+    config(['moztopia-notifications.android_channels' => ['general' => $channel]]);
+    $notification = new NotificationPushMessage((new NotificationPayload('Title', 'Body'))->toArray(), 'event-id', 60);
+    expect(fn () => $notification->toFcm(null))->toThrow(InvalidArgumentException::class, 'channel IDs');
+})->with(['', '   ', 42, false, [['unexpected' => 'array']]]);
 
 it('uses the real APNs channel with exactly one token and parses acceptance', function (): void {
     $device = app(NotificationDeviceService::class)->register(NotificationTestRecipient::create(), 'one', 'ios', 'apns-token');

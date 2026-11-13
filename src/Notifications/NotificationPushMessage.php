@@ -6,6 +6,7 @@ namespace Moztopia\Notifications\Notifications;
 
 use DateTime;
 use Illuminate\Notifications\Notification;
+use InvalidArgumentException;
 use LogicException;
 use NotificationChannels\Apn\ApnMessage;
 use NotificationChannels\Apn\ApnMessagePriority;
@@ -36,11 +37,18 @@ final class NotificationPushMessage extends Notification
 
     public function toFcm(mixed $notifiable): FcmMessage
     {
+        $channels = config('moztopia-notifications.android_channels', []);
+        $channelId = $channels[$this->payload['category']] ?? null;
+        if ($channelId !== null && (!is_string($channelId) || trim($channelId) === '')) {
+            throw new InvalidArgumentException('Android channel IDs must be nonempty strings.');
+        }
+
         return FcmMessage::create()
             ->notification(new FcmAlert(title: $this->payload['title'], body: $this->payload['body'], image: $this->payload['imageUrl']))
             ->data($this->custom())
             ->android(array_filter(['priority' => $this->payload['priority'], 'ttl' => $this->remainingTtl.'s',
-                'collapse_key' => $this->payload['collapseId']]));
+                'collapse_key' => $this->payload['collapseId'],
+                'notification' => $channelId === null ? null : ['channel_id' => $channelId]]));
     }
 
     public function toApn(mixed $notifiable): ApnMessage
