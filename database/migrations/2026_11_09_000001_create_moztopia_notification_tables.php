@@ -13,7 +13,7 @@ return new class () extends Migration {
             $table->uuid('id')->primary();
             $table->string('application', 120);
             $table->string('type');
-            $table->uuidMorphs('notifiable');
+            $table->uuidMorphs('notifiable', 'mn_history_notifiable_index');
             $table->text('data');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();

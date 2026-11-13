@@ -46,7 +46,7 @@ final class NotificationService
                     'type' => $payload->category, 'notifiable_type' => $identity['owner_type'], 'notifiable_id' => $identity['owner_id'],
                     'data' => $payload->toArray()]);
             }
-            if ($preference->push_enabled) {
+            if ($preference->allowsPush($payload->category)) {
                 $devices = NotificationDevice::where($identity)->where('environment', config('moztopia-notifications.environment'))
                     ->whereNull('revoked_at')->where('push_enabled', true)->when($deviceId !== null, fn ($query) => $query->whereKey($deviceId))->get();
                 foreach ($devices as $device) {

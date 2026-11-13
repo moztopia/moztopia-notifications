@@ -26,6 +26,8 @@ return [
         'timeout' => 60,
     ],
     'history' => true,
+    'push_categories' => [],
+    'android_channels' => [],
     'defaults' => [
         'category' => 'general',
         'priority' => 'normal',
