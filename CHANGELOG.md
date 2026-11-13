@@ -2,6 +2,10 @@
 
 This file records package changes by numeric version. Git tags identify the source; [GitHub Releases](https://github.com/moztopia/moztopia-notifications/releases) contain publication notes. A version tag does not establish real-device delivery or production readiness.
 
+## [0.9.3] — Documentation maintenance
+
+Synchronize the public wiki with the 0.9.2 API, configuration, migration, Android channel and verification contracts. Add project-local agent guidance requiring reviewed wiki publication before package pushes and main promotion, with an explicit no-impact record when appropriate. Package runtime and schema are unchanged from 0.9.2.
+
 ## [0.9.2] — Category push preferences and Android channels
 
 - Add optional per-recipient `pushCategories` preferences, independently of history/category eligibility and the global push switch.
