@@ -1,7 +1,6 @@
 # Category push preferences and Android channels
 
-This branch extends the original Whisper 0.9.0 contract for [issue #14](https://github.com/moztopia/moztopia-notifications/issues/14), following [discussion #13](https://github.com/moztopia/moztopia-notifications/discussions/13). It is not published as a numeric release. The consumer owner explicitly authorized temporary branch consumption while coordinating with the package author.
-
+Version 0.9.2 extends the original Whisper 0.9.0 contract for [issue #14](https://github.com/moztopia/moztopia-notifications/issues/14), following [discussion #13](https://github.com/moztopia/moztopia-notifications/discussions/13). It also includes the MariaDB index compatibility fix from 0.9.1.
 ## Consumer usage
 
 Applications choose their own category keys, visible labels and Android channel IDs. For example, a consumer can preserve visits in history while allowing its member to mute message push independently:
@@ -46,16 +45,15 @@ Missing category keys default to allowed, subject to every other eligibility che
 
 Send and worker/retry checks use `NotificationPreference::allowsPush()`. A delivery queued before a member mutes its category is skipped at its next attempt; its history remains intact. The existing recipient coordination also serializes preference changes with delivery attempts. A push already accepted by a provider cannot be recalled, and configuration changes require the normal worker restart/config-cache process. Re-enabling alerts affects new events; it does not recreate skipped deliveries or send old history. Repeating an idempotency key still returns the original event. Keep the same event ID for history, live updates and push deduplication.
 
-## Install this branch
+## Installation and upgrade
 
-In an explicitly authorized consuming application:
+Install the numeric package version through public Packagist:
 
 ```sh
-composer config repositories.moztopia-notifications vcs https://github.com/moztopia/moztopia-notifications.git
-composer require 'moztopia/notifications:dev-wip/0/14-category-push-and-android-channels'
+composer require 'moztopia/notifications:^0.9.2'
 ```
 
-Record the resolved source commit in the integration issue. For reproducible temporary installs where the consumer does not track lockfiles, use the same branch constraint with `#<full-tested-commit>` appended. Do not change the package's `VERSION`, retag 0.9.0, or present this branch as a published Whisper update. Once author coordination produces an accepted numeric release, replace this explicit temporary development constraint with that release and verify its migration/API compatibility.
+Consumers of the temporary development branch should replace their branch/hash constraint with the numeric constraint above. A custom VCS repository is not required for published versions; remove the temporary moztopia-notifications repository entry if it was added only for this integration. Verify the resolved version and follow the migration steps below. Existing immutable tags remain unchanged.
 
 For a fresh installation, publish the package migrations and apply them normally; both migrations are required. For an existing installation, retain its applied initial migration and copy only `database/migrations/2026_11_12_000001_add_push_categories_to_moztopia_notification_preferences.php` from the installed package into the host's migrations directory, then run `php artisan migrate`. Do not republish the initial schema under a new timestamp, edit its migration record, or reset the database. The nullable new column preserves every existing preference and history row. Publish/merge the two new empty config maps as needed and restart long-running workers through the host's normal rollout process.
 
